@@ -1,0 +1,56 @@
+#!/bin/bash
+rep=~/.local/bin
+if [ $# -eq 0 ] ; then
+	echo "		              ALL LOCAL SCRIPT:             "
+	echo "		----------------------------------------------"
+	ls -1 $rep | awk '{ print NR"-"$0 }'
+elif [ $# -eq 1 ] && [ "$1" == "-l" ]; then
+	ls -lh  $rep 
+elif [ "$1" == "-m" ] || [ "$1" == "--modify" ]; then
+	if [ $# -ge 2 ]; then
+		for v in $*; do
+		
+			if [ "$v" == "$1" ]; then
+				continue
+			fi
+			v=$( basename $v)
+			if [ ! -e "$rep/$v" ]; then
+					echo "bash: lscript: $v: no such file in "$rep" directory."
+					continue
+			elif [ ! -f "$rep/$v" ]; then
+					echo "bash: lscript: $v: not a file ."
+					continue
+			else 
+				vim "$rep/$v"
+				echo "$v: the file has been modified !!!."
+			fi
+			
+			size=$(ls -l "$rep/$v" | awk '{print $5}')
+			if [ $size -lt 13 ] ; then 
+				echo "lscript: modify: $v: empty file --> fille will be deleted automatically ... "
+				rm "$rep/$v"
+			fi
+
+		done
+	else
+		echo "lscript: missing file operand"
+	fi
+else
+	for v in $* ;do 
+		v=$( basename $v )
+		if [ -s "${rep}/${v}" ]; then 
+			echo "lscript: $v: the file already exist ."
+		else
+			echo -e "#!/bin/bash\n" >"${rep}/${v}"
+			vim "${rep}/${v}"
+			size=$(ls -l "${rep}/${v}" | awk '{print $5}')
+			if [ $size -gt 13 ]; then  
+				echo "$v: the file is created in \"$rep\""
+				chmod +x "$rep/$v"
+			else
+				echo "lscript: create: ${v}: empty file ---< file will be deleted automatically..."
+				rm "${rep}/${v}"
+			fi 
+		fi
+	done
+fi
