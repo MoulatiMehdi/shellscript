@@ -28,7 +28,7 @@ elif [ "$1" == "-m" ] || [ "$1" == "--modify" ]; then
 			size=$(ls -l "$rep/$v" | awk '{print $5}')
 			if [ $size -lt 13 ] ; then 
 				echo "lscript: modify: $v: empty file --> fille will be deleted automatically ... "
-				rm "$rep/$v"
+				rm "$rep/$v" 
 			fi
 
 		done
