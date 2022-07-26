@@ -8,7 +8,6 @@ fichier=
 
 
 
-
 # cette fonction teste si la tache existe dans la liste
 function is_exist
 {
